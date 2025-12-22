@@ -111,19 +111,19 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8 sm:space-y-10 animate-fadeIn">
       {/* Welcome Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white animate-slideInLeft">
             Welcome back,{" "}
             {user?.full_name?.split(" ")[0] || user?.username || "Athlete"}! 👋
           </h1>
-          <p className="text-gray-400 mt-1 text-sm sm:text-base">
+          <p className="text-gray-400 mt-1 text-sm sm:text-base animate-slideInLeft" style={{ animationDelay: '0.1s' }}>
             Here's your fitness overview for this week
           </p>
         </div>
-        <Link href="/activities/new" className="self-start sm:self-auto">
+        <Link href="/activities/new" className="self-start sm:self-auto animate-slideInRight">
           <Button leftIcon={<FaPlus />}>Record Activity</Button>
         </Link>
       </div>
@@ -162,7 +162,7 @@ export default function DashboardPage() {
       {/* Main Content Grid */}
       <div className="dashboard-grid">
         {/* Activity Feed */}
-        <div className="space-y-4 sm:space-y-6">
+        <div className="space-y-5 sm:space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg sm:text-xl font-bold text-white">
               Recent Activity
@@ -183,15 +183,15 @@ export default function DashboardPage() {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-4 sm:space-y-6">
+        <div className="space-y-5 sm:space-y-6">
           {/* Quick Actions */}
           <Card variant="glass">
-            <h3 className="font-bold text-white mb-4 text-base sm:text-lg">
+            <h3 className="font-bold text-white mb-4 sm:mb-5 text-base sm:text-lg">
               Quick Actions
             </h3>
-            <div className="space-y-2 sm:space-y-3">
+            <div className="space-y-3 sm:space-y-4">
               <Link href="/activities/new" className="block">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-800/50 hover:bg-gray-800 transition-colors">
+                <div className="flex items-center gap-3 sm:gap-4 p-4 rounded-xl bg-gray-800/50 hover:bg-gray-800 transition-colors">
                   <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
                     <FaPlus className="text-sm sm:text-base" />
                   </div>
@@ -201,7 +201,7 @@ export default function DashboardPage() {
                 </div>
               </Link>
               <Link href="/segments" className="block">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-800/50 hover:bg-gray-800 transition-colors">
+                <div className="flex items-center gap-3 sm:gap-4 p-4 rounded-xl bg-gray-800/50 hover:bg-gray-800 transition-colors">
                   <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-500">
                     <FaTrophy className="text-sm sm:text-base" />
                   </div>
@@ -215,10 +215,10 @@ export default function DashboardPage() {
 
           {/* Goals Progress */}
           <Card variant="glass">
-            <h3 className="font-bold text-white mb-4 text-base sm:text-lg">
+            <h3 className="font-bold text-white mb-4 sm:mb-5 text-base sm:text-lg">
               Weekly Goals
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-4 sm:space-y-5">
               <div>
                 <div className="flex justify-between text-xs sm:text-sm mb-2">
                   <span className="text-gray-400">Distance</span>
@@ -260,10 +260,10 @@ export default function DashboardPage() {
 
           {/* Suggested Athletes */}
           <Card variant="glass">
-            <h3 className="font-bold text-white mb-4 text-base sm:text-lg">
+            <h3 className="font-bold text-white mb-4 sm:mb-5 text-base sm:text-lg">
               Athletes to Follow
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-3 sm:space-y-4">
               {[
                 { name: "Sarah Wilson", username: "sarahw", activities: 245 },
                 { name: "Mike Chen", username: "mikechen", activities: 312 },

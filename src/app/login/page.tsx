@@ -51,7 +51,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 py-12">
       {/* Background Effects */}
       <div className="fixed inset-0 bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950" />
       <div className="fixed inset-0">
@@ -61,16 +61,16 @@ export default function LoginPage() {
 
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
-        <Link href="/" className="flex items-center justify-center gap-3 mb-8">
+        <Link href="/" className="flex items-center justify-center gap-3 mb-10">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/25">
             <FaRunning className="text-white text-2xl" />
           </div>
-          <span className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
+          <span className="text-2xl font-bold text-orange-500">
             FitTrack
           </span>
         </Link>
 
-        <Card variant="glass" className="p-8">
+        <Card variant="glass" className="p-6 sm:p-8">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-white mb-2">Welcome Back</h1>
             <p className="text-gray-400">

@@ -129,9 +129,10 @@ export function getInitials(name: string): string {
     .slice(0, 2);
 }
 
-// Class name utility
-export function cn(
-  ...classes: (string | boolean | undefined | null)[]
-): string {
-  return classes.filter(Boolean).join(" ");
+// Class name utility (shadcn pattern with tailwind-merge)
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]): string {
+  return twMerge(clsx(inputs));
 }

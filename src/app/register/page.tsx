@@ -90,16 +90,16 @@ export default function RegisterPage() {
 
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
-        <Link href="/" className="flex items-center justify-center gap-3 mb-8">
+        <Link href="/" className="flex items-center justify-center gap-3 mb-10">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/25">
             <FaRunning className="text-white text-2xl" />
           </div>
-          <span className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
+          <span className="text-2xl font-bold text-orange-500">
             FitTrack
           </span>
         </Link>
 
-        <Card variant="glass" className="p-8">
+        <Card variant="glass" className="p-6 sm:p-8">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-white mb-2">
               Create Account
@@ -115,7 +115,7 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <Input
               label="Full Name"
               placeholder="John Doe"
@@ -175,7 +175,7 @@ export default function RegisterPage() {
               />
 
               {/* Password Requirements */}
-              <div className="mt-3 space-y-2">
+              <div className="mt-4 space-y-2">
                 {passwordRequirements.map((req, index) => {
                   const isMet = req.test(formData.password);
                   return (
@@ -196,7 +196,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-3">
               <Button
                 type="submit"
                 className="w-full"
@@ -208,7 +208,7 @@ export default function RegisterPage() {
             </div>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-400">
+          <div className="mt-8 text-center text-sm text-gray-400">
             By signing up, you agree to our{" "}
             <Link
               href="/terms"

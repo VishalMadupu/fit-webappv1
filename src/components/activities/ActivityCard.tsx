@@ -66,8 +66,8 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
   return (
     <Card variant="glass" hover className="overflow-hidden animate-fadeIn">
       {/* Header */}
-      <div className="flex items-start justify-between gap-3 mb-4">
-        <div className="flex items-center gap-3 min-w-0 flex-1">
+      <div className="flex items-start justify-between gap-4 mb-5 sm:mb-6">
+        <div className="flex items-center gap-4 min-w-0 flex-1">
           {showUser && activity.user && (
             <Link
               href={`/profile/${activity.user.username}`}
@@ -106,7 +106,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
 
       {/* Activity Title & Type */}
       <Link href={`/activities/${activity.id}`} className="block group">
-        <div className="flex items-start gap-3 mb-4">
+        <div className="flex items-start gap-4 mb-5 sm:mb-6">
           <div className={cn("p-2.5 rounded-xl flex-shrink-0", colorClass)}>
             <Icon className="text-xl" />
           </div>
@@ -131,7 +131,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
 
       {/* Map Preview Placeholder */}
       {activity.polyline && (
-        <div className="h-36 sm:h-44 rounded-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 mb-4 overflow-hidden relative">
+        <div className="h-36 sm:h-44 rounded-xl bg-gradient-to-br from-gray-800/80 to-gray-900/80 mb-5 sm:mb-6 overflow-hidden relative">
           <div className="absolute inset-0 flex items-center justify-center text-gray-600">
             <div className="text-center">
               <FaMapMarkerAlt className="text-2xl mx-auto mb-1 opacity-50" />
@@ -142,8 +142,8 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
       )}
 
       {/* Stats */}
-      <div className="activity-stats-grid mb-4">
-        <div className="text-center p-3 sm:p-4 rounded-xl bg-gray-800/40 border border-gray-700/30">
+      <div className="activity-stats-grid mb-5 sm:mb-6">
+        <div className="text-center p-4 sm:p-5 rounded-xl bg-gray-800/40 border border-gray-700/30">
           <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider mb-1">
             Distance
           </p>
@@ -151,7 +151,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
             {formatDistance(activity.distance)}
           </p>
         </div>
-        <div className="text-center p-3 sm:p-4 rounded-xl bg-gray-800/40 border border-gray-700/30">
+        <div className="text-center p-4 sm:p-5 rounded-xl bg-gray-800/40 border border-gray-700/30">
           <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider mb-1">
             Duration
           </p>
@@ -159,7 +159,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
             {formatDuration(activity.duration)}
           </p>
         </div>
-        <div className="text-center p-3 sm:p-4 rounded-xl bg-gray-800/40 border border-gray-700/30">
+        <div className="text-center p-4 sm:p-5 rounded-xl bg-gray-800/40 border border-gray-700/30">
           <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider mb-1">
             Pace
           </p>
@@ -171,7 +171,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
 
       {/* Additional Stats */}
       {(activity.elevation_gain > 0 || activity.calories > 0) && (
-        <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-gray-400 mb-4">
+        <div className="flex flex-wrap items-center gap-4 sm:gap-5 text-sm text-gray-400 mb-5 sm:mb-6">
           {activity.elevation_gain > 0 && (
             <span className="flex items-center gap-1">
               <span className="text-green-500">↑</span>{" "}
@@ -194,17 +194,17 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
 
       {/* Description */}
       {activity.description && (
-        <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+        <p className="text-gray-400 text-sm mb-5 sm:mb-6 line-clamp-2">
           {activity.description}
         </p>
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-2 sm:gap-4 pt-4 border-t border-gray-700/50">
+      <div className="flex items-center gap-3 sm:gap-5 pt-5 sm:pt-6 border-t border-gray-700/50">
         <button
           onClick={() => onKudos?.(activity.id)}
           className={cn(
-            "flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl transition-all text-sm sm:text-base",
+            "flex items-center gap-2 sm:gap-2.5 px-4 sm:px-5 py-2.5 rounded-xl transition-all text-sm sm:text-base",
             activity.has_kudos
               ? "bg-red-500/10 text-red-500"
               : "text-gray-400 hover:text-red-500 hover:bg-red-500/10"
@@ -220,7 +220,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
         </button>
         <button
           onClick={() => onComment?.(activity.id)}
-          className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl text-gray-400 hover:text-blue-500 hover:bg-blue-500/10 transition-all text-sm sm:text-base"
+          className="flex items-center gap-2 sm:gap-2.5 px-4 sm:px-5 py-2.5 rounded-xl text-gray-400 hover:text-blue-500 hover:bg-blue-500/10 transition-all text-sm sm:text-base"
         >
           <FaComment className="text-sm sm:text-base" />
           <span className="font-medium">{activity.comments_count || 0}</span>

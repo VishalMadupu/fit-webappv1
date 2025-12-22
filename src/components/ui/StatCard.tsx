@@ -23,24 +23,24 @@ const StatCard: React.FC<StatCardProps> = ({
 }) => {
   const sizes = {
     sm: {
-      container: "p-3 sm:p-4",
+      container: "p-4 sm:p-5",
       label: "text-[10px] sm:text-xs",
       value: "text-lg sm:text-xl",
-      icon: "w-8 h-8 sm:w-9 sm:h-9",
+      icon: "w-9 h-9 sm:w-10 sm:h-10",
       iconSize: "text-base sm:text-lg",
     },
     md: {
-      container: "p-3 sm:p-4 lg:p-5",
+      container: "p-4 sm:p-5 lg:p-6",
       label: "text-xs sm:text-sm",
       value: "text-xl sm:text-2xl",
-      icon: "w-9 h-9 sm:w-10 sm:h-10",
+      icon: "w-10 h-10 sm:w-11 sm:h-11",
       iconSize: "text-lg sm:text-xl",
     },
     lg: {
-      container: "p-4 sm:p-5 lg:p-6",
+      container: "p-5 sm:p-6 lg:p-7",
       label: "text-sm sm:text-base",
       value: "text-2xl sm:text-3xl",
-      icon: "w-10 h-10 sm:w-12 sm:h-12",
+      icon: "w-11 h-11 sm:w-12 sm:h-12",
       iconSize: "text-xl sm:text-2xl",
     },
   };

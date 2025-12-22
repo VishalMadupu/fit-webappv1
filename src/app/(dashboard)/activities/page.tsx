@@ -104,9 +104,9 @@ export default function ActivitiesPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
         <div>
           <h1 className="text-3xl font-bold text-white">My Activities</h1>
           <p className="text-gray-400 mt-1">
@@ -119,8 +119,8 @@ export default function ActivitiesPage() {
       </div>
 
       {/* Filters */}
-      <Card variant="glass" padding="sm">
-        <div className="flex flex-col sm:flex-row gap-4">
+      <Card variant="glass" padding="md">
+        <div className="flex flex-col sm:flex-row gap-5">
           <div className="flex-1">
             <Input
               placeholder="Search activities..."
@@ -129,7 +129,7 @@ export default function ActivitiesPage() {
               leftIcon={<FaSearch />}
             />
           </div>
-          <div className="flex gap-2 overflow-x-auto hide-scrollbar">
+          <div className="flex gap-2.5 overflow-x-auto hide-scrollbar">
             {activityFilters.map((filter) => (
               <button
                 key={filter.value}

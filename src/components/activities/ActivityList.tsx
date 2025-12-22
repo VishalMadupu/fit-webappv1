@@ -24,7 +24,7 @@ const ActivityList: React.FC<ActivityListProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 sm:space-y-8">
         {[...Array(3)].map((_, i) => (
           <SkeletonActivityCard key={i} />
         ))}
@@ -49,7 +49,7 @@ const ActivityList: React.FC<ActivityListProps> = ({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-8">
       {activities.map((activity) => (
         <ActivityCard
           key={activity.id}
