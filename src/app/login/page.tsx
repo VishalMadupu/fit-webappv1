@@ -11,7 +11,7 @@ import {
   FaEyeSlash,
 } from "react-icons/fa";
 import { Button, Input, Card } from "@/components/ui";
-import { authAPI } from "@/lib/api";
+import { authService } from "@/services/auth/authService";
 import { useAuthStore } from "@/lib/store";
 
 export default function LoginPage() {
@@ -31,11 +31,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await authAPI.login(formData);
-      const { access_token, refresh_token, user } = response.data;
-
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
+      const { user, access_token, refresh_token } = await authService.login(formData);
 
       setUser(user);
       setIsAuthenticated(true);

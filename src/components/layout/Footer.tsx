@@ -24,6 +24,11 @@ const Footer: React.FC = () => {
       { label: "Terms of Service", href: "/terms" },
       { label: "Cookie Policy", href: "/cookies" },
     ],
+    account: [
+      { label: "Profile", href: "/dashboard/profile" },
+      { label: "Change Password", href: "/change-password" },
+      { label: "Forgot Password", href: "/forgot-password" },
+    ],
   };
 
   return (
@@ -109,6 +114,22 @@ const Footer: React.FC = () => {
             <h4 className="text-white font-semibold mb-5 text-lg">Support</h4>
             <ul className="space-y-3">
               {footerLinks.support.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-400 hover:text-white text-base transition-colors block py-1"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-white font-semibold mb-5 text-lg">Account</h4>
+            <ul className="space-y-3">
+              {footerLinks.account.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

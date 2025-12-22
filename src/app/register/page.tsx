@@ -13,7 +13,7 @@ import {
   FaCheck,
 } from "react-icons/fa";
 import { Button, Input, Card } from "@/components/ui";
-import { authAPI } from "@/lib/api";
+import { authService } from "@/services/auth/authService";
 import { useAuthStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -53,18 +53,13 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
-      await authAPI.register(formData);
+      await authService.register(formData);
 
       // Auto login after registration
-      const loginResponse = await authAPI.login({
+      const { user, access_token, refresh_token } = await authService.login({
         username: formData.username,
         password: formData.password,
       });
-
-      const { access_token, refresh_token, user } = loginResponse.data;
-
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
 
       setUser(user);
       setIsAuthenticated(true);
@@ -94,9 +89,7 @@ export default function RegisterPage() {
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/25">
             <FaRunning className="text-white text-2xl" />
           </div>
-          <span className="text-2xl font-bold text-orange-500">
-            FitTrack
-          </span>
+          <span className="text-2xl font-bold text-orange-500">FitTrack</span>
         </Link>
 
         <Card variant="glass" className="p-6 sm:p-8">

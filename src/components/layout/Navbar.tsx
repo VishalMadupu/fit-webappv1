@@ -95,7 +95,7 @@ const Navbar: React.FC = () => {
 
                 {/* Profile */}
                 <Link
-                  href="/profile"
+                  href="/dashboard/profile"
                   className="flex items-center gap-2.5 p-1 rounded-xl hover:bg-gray-800/50 transition-all"
                 >
                   <Avatar

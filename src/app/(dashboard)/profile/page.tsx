@@ -1,208 +1,383 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
-  FaCamera,
+  FaUser,
+  FaEnvelope,
   FaMapMarkerAlt,
-  FaCalendar,
-  FaRunning,
-  FaCog,
-  FaEdit,
+  FaPencilAlt,
+  FaSave,
+  FaTimes,
+  FaCamera,
+  FaLock,
 } from "react-icons/fa";
-import { useAuthStore, Activity } from "@/lib/store";
-import { Card, Button, Avatar, Badge, StatCard } from "@/components/ui";
-import { ActivityList } from "@/components/activities";
-import { formatDistance, formatDuration, cn } from "@/lib/utils";
-
-// Mock user stats
-const userStats = {
-  totalActivities: 156,
-  totalDistance: 1250000,
-  totalDuration: 432000,
-  totalElevation: 12500,
-  followers: 234,
-  following: 189,
-};
-
-// Mock activities
-const mockActivities: Activity[] = [
-  {
-    id: 1,
-    user_id: 1,
-    title: "Morning Run",
-    activity_type: "run",
-    status: "completed",
-    distance: 8500,
-    duration: 2580,
-    elevation_gain: 120,
-    elevation_loss: 115,
-    calories: 650,
-    avg_speed: 3.29,
-    max_speed: 4.2,
-    started_at: new Date(Date.now() - 3600000).toISOString(),
-    kudos_count: 24,
-    comments_count: 5,
-  },
-];
+import { Card, Button, Input, Avatar } from "@/components/ui";
+import { useAuthStore } from "@/lib/store";
+import { authService } from "@/services/auth/authService";
 
 export default function ProfilePage() {
-  const { user } = useAuthStore();
-  const [activeTab, setActiveTab] = useState<"activities" | "stats">(
-    "activities"
+  const router = useRouter();
+  const { user, updateUser, logout } = useAuthStore();
+  const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const [formData, setFormData] = useState({
+    full_name: user?.full_name || "",
+    email: user?.email || "",
+    username: user?.username || "",
+    bio: user?.bio || "",
+    location: user?.location || "",
+  });
+
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState(
+    user?.profile_picture || ""
   );
 
-  const displayUser = user || {
-    username: "johndoe",
-    full_name: "John Doe",
-    bio: "Passionate runner and cyclist. Training for my first marathon! 🏃‍♂️",
-    location: "New York, NY",
-    created_at: "2023-01-15",
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        full_name: user.full_name || "",
+        email: user.email || "",
+        username: user.username || "",
+        bio: user.bio || "",
+        location: user.location || "",
+      });
+      setAvatarPreview(user.profile_picture || "");
+    }
+  }, [user]);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setAvatarFile(file);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUpdateProfile = async () => {
+    setIsLoading(true);
+    setError("");
+    setSuccessMessage("");
+
+    try {
+      // Update profile information
+      const updatedUser = await authService.updateProfile({
+        full_name: formData.full_name,
+        bio: formData.bio,
+        location: formData.location,
+      });
+
+      // Update avatar if selected
+      if (avatarFile) {
+        await authService.updateAvatar(avatarFile);
+      }
+
+      // Update local state
+      updateUser({
+        full_name: formData.full_name,
+        bio: formData.bio,
+        location: formData.location,
+        profile_picture: avatarPreview,
+      });
+
+      setSuccessMessage("Profile updated successfully!");
+      setIsEditing(false);
+    } catch (err: any) {
+      setError(
+        err.response?.data?.detail ||
+          "Failed to update profile. Please try again."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (
+      !window.confirm(
+        "Are you sure you want to delete your account? This action cannot be undone."
+      )
+    ) {
+      return;
+    }
+
+    const password = prompt(
+      "Please enter your password to confirm account deletion:"
+    );
+    if (!password) return;
+
+    try {
+      await authService.deleteAccount(password);
+      alert("Your account has been deleted successfully.");
+      router.push("/login");
+    } catch (err: any) {
+      setError(
+        err.response?.data?.detail ||
+          "Failed to delete account. Please try again."
+      );
+    }
+  };
+
+  if (!user) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <Card className="p-8 text-center">
+          <h2 className="text-2xl font-bold text-white mb-4">Please log in</h2>
+          <p className="text-gray-400 mb-6">
+            You need to be logged in to view your profile
+          </p>
+          <Link href="/login">
+            <Button>Go to Login</Button>
+          </Link>
+        </Card>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-8">
       {/* Profile Header */}
-      <Card variant="glass" className="relative overflow-hidden">
-        {/* Cover Photo Placeholder */}
-        <div className="h-32 bg-gradient-to-r from-orange-500/20 to-red-500/20 -mx-6 -mt-6 mb-4" />
-
-        <div className="flex flex-col sm:flex-row sm:items-end gap-4 -mt-16 relative z-10">
-          {/* Avatar */}
-          <div className="relative">
-            <Avatar
-              name={displayUser.full_name || displayUser.username}
-              size="xl"
-              showBorder
-            />
-            <button className="absolute bottom-0 right-0 p-2 bg-gray-800 rounded-full text-gray-400 hover:text-white hover:bg-gray-700 transition-all">
-              <FaCamera className="text-sm" />
-            </button>
-          </div>
-
-          <div className="flex-1">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h1 className="text-2xl font-bold text-white">
-                  {displayUser.full_name || displayUser.username}
-                </h1>
-                <p className="text-gray-400">@{displayUser.username}</p>
-              </div>
-              <div className="flex gap-3">
-                <Link href="/settings">
-                  <Button variant="outline" size="sm" leftIcon={<FaCog />}>
-                    Settings
-                  </Button>
-                </Link>
-                <Button size="sm" leftIcon={<FaEdit />}>
-                  Edit Profile
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bio and Info */}
-        <div className="mt-6 space-y-3">
-          {displayUser.bio && (
-            <p className="text-gray-300">{displayUser.bio}</p>
+      <div className="flex flex-col md:flex-row items-center gap-6 p-6 bg-gray-900/50 rounded-2xl">
+        <div className="relative">
+          <Avatar
+            src={avatarPreview || undefined}
+            name={user.full_name || user.username || "User"}
+            size="xl"
+          />
+          {isEditing && (
+            <label className="absolute bottom-0 right-0 bg-orange-500 p-2 rounded-full cursor-pointer">
+              <FaCamera className="text-white" />
+              <input
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleAvatarChange}
+              />
+            </label>
           )}
-          <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-            {displayUser.location && (
-              <span className="flex items-center gap-1">
-                <FaMapMarkerAlt className="text-xs" />
-                {displayUser.location}
-              </span>
-            )}
-            <span className="flex items-center gap-1">
-              <FaCalendar className="text-xs" />
-              Joined{" "}
-              {new Date(displayUser.created_at).toLocaleDateString("en-US", {
-                month: "long",
-                year: "numeric",
-              })}
-            </span>
-          </div>
         </div>
 
-        {/* Stats Row */}
-        <div className="flex gap-6 mt-6 pt-6 border-t border-gray-700/50">
-          <div className="text-center">
-            <p className="text-2xl font-bold text-white">
-              {userStats.totalActivities}
-            </p>
-            <p className="text-sm text-gray-400">Activities</p>
+        <div className="text-center md:text-left">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
+            {formData.full_name || user.username}
+          </h1>
+          <p className="text-gray-400 mt-1">@{user.username}</p>
+          <p className="text-gray-500 mt-2">{user.email}</p>
+        </div>
+
+        <div className="flex gap-3 mt-4 md:mt-0 md:ml-auto">
+          {!isEditing ? (
+            <Button
+              leftIcon={<FaPencilAlt />}
+              onClick={() => setIsEditing(true)}
+            >
+              Edit Profile
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                leftIcon={<FaTimes />}
+                onClick={() => {
+                  setIsEditing(false);
+                  // Reset form to original values
+                  setFormData({
+                    full_name: user.full_name || "",
+                    email: user.email || "",
+                    username: user.username || "",
+                    bio: user.bio || "",
+                    location: user.location || "",
+                  });
+                  setAvatarPreview(user.profile_picture || "");
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                leftIcon={<FaSave />}
+                onClick={handleUpdateProfile}
+                isLoading={isLoading}
+              >
+                Save
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Success/Error Messages */}
+      {error && (
+        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400">
+          {error}
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400">
+          {successMessage}
+        </div>
+      )}
+
+      {/* Profile Form */}
+      <Card className="p-6">
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-2">
+              Full Name
+            </label>
+            {isEditing ? (
+              <Input
+                name="full_name"
+                value={formData.full_name}
+                onChange={handleInputChange}
+                leftIcon={<FaUser />}
+                placeholder="Enter your full name"
+              />
+            ) : (
+              <p className="text-white">{user.full_name || "Not provided"}</p>
+            )}
           </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-white">
-              {userStats.followers}
-            </p>
-            <p className="text-sm text-gray-400">Followers</p>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-2">
+              Username
+            </label>
+            {isEditing ? (
+              <Input
+                name="username"
+                value={formData.username}
+                onChange={handleInputChange}
+                leftIcon={<FaUser />}
+                placeholder="Enter your username"
+                disabled
+              />
+            ) : (
+              <p className="text-white">@{user.username}</p>
+            )}
           </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-white">
-              {userStats.following}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-2">
+              Email
+            </label>
+            {isEditing ? (
+              <Input
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                leftIcon={<FaEnvelope />}
+                placeholder="Enter your email"
+                disabled
+              />
+            ) : (
+              <p className="text-white">{user.email}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-2">
+              Location
+            </label>
+            {isEditing ? (
+              <Input
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+                leftIcon={<FaMapMarkerAlt />}
+                placeholder="Enter your location"
+              />
+            ) : (
+              <p className="text-white">{user.location || "Not provided"}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-2">
+              Bio
+            </label>
+            {isEditing ? (
+              <textarea
+                name="bio"
+                value={formData.bio}
+                onChange={handleInputChange}
+                className="w-full p-3 rounded-xl bg-gray-800/50 border border-gray-700/50 text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-colors resize-none"
+                rows={4}
+                placeholder="Tell us about yourself"
+              />
+            ) : (
+              <p className="text-white">{user.bio || "No bio provided"}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-2">
+              Member Since
+            </label>
+            <p className="text-white">
+              {new Date(user.created_at).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </p>
-            <p className="text-sm text-gray-400">Following</p>
           </div>
         </div>
       </Card>
 
-      {/* Content Tabs */}
-      <div className="flex gap-2 border-b border-gray-800">
-        {[
-          { key: "activities" as const, label: "Activities", icon: FaRunning },
-          { key: "stats" as const, label: "Statistics", icon: FaRunning },
-        ].map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={cn(
-              "flex items-center gap-2 px-4 py-3 font-medium transition-all border-b-2 -mb-[2px]",
-              activeTab === tab.key
-                ? "text-orange-500 border-orange-500"
-                : "text-gray-400 border-transparent hover:text-white"
-            )}
+      {/* Account Settings */}
+      <Card className="p-6">
+        <h2 className="text-xl font-bold text-white mb-4">Account Settings</h2>
+
+        <div className="space-y-4">
+          <Link href="/change-password">
+            <Button
+              variant="outline"
+              leftIcon={<FaLock />}
+              className="w-full sm:w-auto"
+            >
+              Change Password
+            </Button>
+          </Link>
+
+          <Button
+            variant="danger"
+            onClick={handleDeleteAccount}
+            className="w-full sm:w-auto"
           >
-            <tab.icon />
-            {tab.label}
-          </button>
-        ))}
-      </div>
+            Delete Account
+          </Button>
 
-      {/* Tab Content */}
-      {activeTab === "activities" && (
-        <ActivityList
-          activities={mockActivities}
-          showUser={false}
-          emptyMessage="No activities yet"
-        />
-      )}
-
-      {activeTab === "stats" && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard
-            label="Total Activities"
-            value={userStats.totalActivities.toString()}
-            icon={<FaRunning className="text-xl" />}
-          />
-          <StatCard
-            label="Total Distance"
-            value={formatDistance(userStats.totalDistance)}
-            icon={<FaRunning className="text-xl" />}
-          />
-          <StatCard
-            label="Total Time"
-            value={formatDuration(userStats.totalDuration)}
-            icon={<FaRunning className="text-xl" />}
-          />
-          <StatCard
-            label="Total Elevation"
-            value={`${(userStats.totalElevation / 1000).toFixed(1)}k m`}
-            icon={<FaRunning className="text-xl" />}
-          />
+          <Button
+            variant="outline"
+            onClick={() => {
+              authService.logout();
+              router.push("/login");
+            }}
+            className="w-full sm:w-auto"
+          >
+            Logout
+          </Button>
         </div>
-      )}
+      </Card>
     </div>
   );
 }
