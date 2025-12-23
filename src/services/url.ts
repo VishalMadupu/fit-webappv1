@@ -11,22 +11,22 @@ import {
   UpdateActivityData,
 } from "./interface";
 
-// Auth API
+// Auth API (versioned)
 export const authAPI = {
-  register: (data: RegisterData) => api.post("/auth/register", data),
-  login: (data: LoginCredentials) => api.post("/auth/login", data),
-  logout: () => api.post("/auth/logout"),
+  register: (data: RegisterData) => api.post("/auth/v1/register", data),
+  login: (data: LoginCredentials) => api.post("/auth/v1/login", data),
+  logout: () => api.post("/auth/v1/logout"),
   refresh: (refreshToken: string) =>
-    api.post("/auth/refresh", { refresh_token: refreshToken }),
+    api.post("/auth/v1/refresh", { refresh_token: refreshToken }),
   forgotPassword: (email: string) =>
-    api.post("/auth/forgot-password", { email }),
+    api.post("/auth/v1/forgot-password", { email }),
   resetPassword: (data: ResetPasswordData) =>
-    api.post("/auth/reset-password", data),
+    api.post("/auth/v1/reset-password", data),
   changePassword: (data: ChangePasswordData) =>
-    api.post("/auth/change-password", data),
-  verifyEmail: (token: string) => api.post("/auth/verify-email", { token }),
-  resendVerification: () => api.post("/auth/resend-verification"),
-  resendReset: (email: string) => api.post("/auth/resend-reset", { email }),
+    api.post("/auth/v1/change-password", data),
+  verifyEmail: (token: string) => api.post("/auth/v1/verify-email", { token }),
+  resendVerification: () => api.post("/auth/v1/resend-verification"),
+  resendReset: (email: string) => api.post("/auth/v1/resend-reset", { email }),
 };
 
 // User API
@@ -88,6 +88,7 @@ export const socialAPI = {
   unfollow: (userId: number) => api.delete(`/social/follow/${userId}`),
   getFollowers: (userId: number) => api.get(`/social/followers/${userId}`),
   getFollowing: (userId: number) => api.get(`/social/following/${userId}`),
+  getFollowStats: (userId: number) => api.get(`/social/stats/${userId}`),
   giveKudos: (activityId: number) => api.post(`/social/kudos/${activityId}`),
   removeKudos: (activityId: number) =>
     api.delete(`/social/kudos/${activityId}`),
@@ -95,4 +96,60 @@ export const socialAPI = {
     api.post(`/social/comments/${activityId}`, { content }),
   getComments: (activityId: number) =>
     api.get(`/social/comments/${activityId}`),
+  deleteComment: (commentId: number) =>
+    api.delete(`/social/comments/${commentId}`),
+};
+
+// Notification API
+export const notificationAPI = {
+  list: (userId: number, params?: PaginationParams) =>
+    api.get("/notifications", { params: { user_id: userId, ...params } }),
+  getUnreadCount: (userId: number) =>
+    api.get("/notifications/unread-count", { params: { user_id: userId } }),
+  markAsRead: (notificationId: number) =>
+    api.put(`/notifications/${notificationId}/read`),
+  markAllRead: (userId: number) =>
+    api.put("/notifications/mark-all-read", null, {
+      params: { user_id: userId },
+    }),
+  delete: (notificationId: number) =>
+    api.delete(`/notifications/${notificationId}`),
+  registerDevice: (userId: number, deviceToken: string, deviceType: string) =>
+    api.post(
+      "/notifications/devices",
+      { device_token: deviceToken, device_type: deviceType },
+      { params: { user_id: userId } }
+    ),
+  unregisterDevice: (deviceToken: string) =>
+    api.delete(`/notifications/devices/${deviceToken}`),
+  getPreferences: (userId: number) =>
+    api.get(`/notifications/preferences/${userId}`),
+  updatePreferences: (userId: number, preferences: any) =>
+    api.put(`/notifications/preferences/${userId}`, preferences),
+};
+
+// Email API (for auth-related emails)
+export const emailAPI = {
+  sendWelcome: (email: string, username: string) =>
+    api.post("/email/welcome", { email, username }),
+  sendOTP: (email: string, otpCode: string, purpose: string = "verification") =>
+    api.post("/email/otp", { email, otp_code: otpCode, purpose }),
+  sendForgotPassword: (email: string, resetToken: string, resetUrl?: string) =>
+    api.post("/email/forgot-password", {
+      email,
+      reset_token: resetToken,
+      reset_url: resetUrl,
+    }),
+  sendPasswordChanged: (email: string, username: string) =>
+    api.post("/email/password-changed", { email, username }),
+  sendEmailVerification: (
+    email: string,
+    token: string,
+    verificationUrl?: string
+  ) =>
+    api.post("/email/verify-email", {
+      email,
+      token,
+      verification_url: verificationUrl,
+    }),
 };
