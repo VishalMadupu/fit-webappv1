@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FaLock, FaEnvelope, FaCheck, FaArrowLeft } from "react-icons/fa";
 import { Button, Input, Card } from "@/components/ui";
 import { authService } from "@/services/auth/authService";
 
-export default function PasswordResetPage() {
+function PasswordResetContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -227,5 +227,21 @@ export default function PasswordResetPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-950">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+    </div>
+  );
+}
+
+export default function PasswordResetPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <PasswordResetContent />
+    </Suspense>
   );
 }
