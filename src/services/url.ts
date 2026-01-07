@@ -35,6 +35,9 @@ export const authAPI = {
   verifyEmail: (token: string) => api.post("/auth/v1/verify-email", { token }),
   resendVerification: () => api.post("/auth/v1/resend-verification"),
   resendReset: (email: string) => api.post("/auth/v1/resend-reset", { email }),
+  sendOTP: (email: string) => api.post("/auth/v1/send-otp", { email }),
+  verifyOTP: (email: string, otp_code: string) =>
+    api.post("/auth/v1/verify-otp", { email, otp_code }),
 };
 
 // User API

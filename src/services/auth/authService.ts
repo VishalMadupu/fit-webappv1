@@ -170,6 +170,30 @@ export const authService = {
   },
 
   /**
+   * Send OTP for email verification
+   */
+  sendOTP: async (email: string) => {
+    try {
+      const response = await authAPI.sendOTP(email);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  /**
+   * Verify OTP code
+   */
+  verifyOTP: async (email: string, otpCode: string) => {
+    try {
+      const response = await authAPI.verifyOTP(email, otpCode);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  /**
    * Get current user profile
    */
   getProfile: async () => {

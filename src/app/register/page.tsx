@@ -55,16 +55,8 @@ export default function RegisterPage() {
     try {
       await authService.register(formData);
 
-      // Auto login after registration (use email, not username)
-      const { user, access_token, refresh_token } = await authService.login({
-        email: formData.email,
-        password: formData.password,
-      });
-
-      setUser(user);
-      setIsAuthenticated(true);
-
-      router.push("/dashboard");
+      // Redirect to OTP verification page
+      router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
     } catch (err: any) {
       setError(
         err.response?.data?.detail || "Registration failed. Please try again."
