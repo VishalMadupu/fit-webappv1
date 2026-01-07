@@ -55,9 +55,9 @@ export default function RegisterPage() {
     try {
       await authService.register(formData);
 
-      // Auto login after registration
+      // Auto login after registration (use email, not username)
       const { user, access_token, refresh_token } = await authService.login({
-        username: formData.username,
+        email: formData.email,
         password: formData.password,
       });
 

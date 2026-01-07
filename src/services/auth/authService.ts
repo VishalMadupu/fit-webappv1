@@ -15,18 +15,21 @@ export const authService = {
    */
   register: async (userData: RegisterData) => {
     try {
-      const response = await authAPI.register(userData);
-      const { user, access_token, refresh_token } = response.data;
+      // Backend expects first_name/last_name, not full_name
+      const [firstName, ...lastNameParts] = (userData.full_name || "").split(
+        " "
+      );
+      const registerPayload = {
+        email: userData.email,
+        username: userData.username,
+        password: userData.password,
+        first_name: firstName || undefined,
+        last_name: lastNameParts.join(" ") || undefined,
+      };
 
-      // Store tokens in localStorage
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
-
-      // Update auth store
-      const { setUser, setIsAuthenticated } = useAuthStore.getState();
-      setUser(user);
-      setIsAuthenticated(true);
-
+      const response = await authAPI.register(registerPayload);
+      // Backend returns only UserResponse (no tokens)
+      // Caller should login separately after registration
       return response.data;
     } catch (error) {
       throw error;
@@ -39,18 +42,23 @@ export const authService = {
   login: async (credentials: LoginCredentials) => {
     try {
       const response = await authAPI.login(credentials);
-      const { user, access_token, refresh_token } = response.data;
+      // Backend returns Token { access_token, refresh_token, token_type }
+      const { access_token, refresh_token } = response.data;
 
       // Store tokens in localStorage
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
+
+      // Fetch user profile after login
+      const userResponse = await userAPI.getMe();
+      const user = userResponse.data;
 
       // Update auth store
       const { setUser, setIsAuthenticated } = useAuthStore.getState();
       setUser(user);
       setIsAuthenticated(true);
 
-      return response.data;
+      return { user, access_token, refresh_token };
     } catch (error) {
       throw error;
     }

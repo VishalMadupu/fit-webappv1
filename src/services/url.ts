@@ -14,7 +14,15 @@ import {
 // Auth API (versioned)
 export const authAPI = {
   register: (data: RegisterData) => api.post("/auth/v1/register", data),
-  login: (data: LoginCredentials) => api.post("/auth/v1/login", data),
+  login: (data: LoginCredentials) => {
+    // OAuth2PasswordRequestForm expects form-urlencoded data
+    const formData = new URLSearchParams();
+    formData.append("username", data.email || data.username || ""); // OAuth2 uses 'username' field
+    formData.append("password", data.password);
+    return api.post("/auth/v1/login", formData, {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    });
+  },
   logout: () => api.post("/auth/v1/logout"),
   refresh: (refreshToken: string) =>
     api.post("/auth/v1/refresh", { refresh_token: refreshToken }),

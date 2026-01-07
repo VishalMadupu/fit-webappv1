@@ -66,7 +66,8 @@ export interface RegisterData {
 }
 
 export interface LoginCredentials {
-  username: string;
+  username?: string;
+  email?: string;
   password: string;
 }
 
