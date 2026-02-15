@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { FaRunning, FaEnvelope, FaCheckCircle } from "react-icons/fa";
@@ -8,7 +8,7 @@ import { Button, Card } from "@/components/ui";
 import { authService } from "@/services/auth/authService";
 import { cn } from "@/lib/utils";
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
@@ -72,7 +72,7 @@ export default function VerifyEmailPage() {
 
   const handleKeyDown = (
     index: number,
-    e: React.KeyboardEvent<HTMLInputElement>
+    e: React.KeyboardEvent<HTMLInputElement>,
   ) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
@@ -214,7 +214,7 @@ export default function VerifyEmailPage() {
                   "w-12 h-14 text-center text-2xl font-bold rounded-xl",
                   "bg-gray-800/50 border-2 border-gray-700",
                   "text-white focus:border-orange-500 focus:outline-none",
-                  "transition-all duration-200"
+                  "transition-all duration-200",
                 )}
               />
             ))}
@@ -261,5 +261,19 @@ export default function VerifyEmailPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gray-950">
+          <div className="text-orange-500">Loading...</div>
+        </div>
+      }
+    >
+      <VerifyEmailContent />
+    </Suspense>
   );
 }
