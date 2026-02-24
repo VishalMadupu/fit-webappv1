@@ -21,18 +21,28 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       type = "text",
       ...props
     },
-    ref
+    ref,
   ) => {
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-medium text-gray-300 mb-2.5">
+          <label
+            className="block text-sm font-semibold mb-2"
+            style={{
+              fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+              color: "rgba(209, 213, 219, 0.95)",
+              letterSpacing: "0.01em",
+            }}
+          >
             {label}
           </label>
         )}
         <div className="relative">
           {leftIcon && (
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500">
+            <div
+              className="absolute inset-y-0 left-0 flex items-center pointer-events-none text-gray-500"
+              style={{ paddingLeft: "14px", width: "3rem" }}
+            >
               {leftIcon}
             </div>
           )}
@@ -41,34 +51,42 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             type={type}
             className={cn(
               `
-              w-full px-4 sm:px-5 py-3.5 rounded-xl
-              bg-gray-800/50 border border-gray-700
-              text-white placeholder-gray-500
+              w-full rounded-xl
+              bg-gray-800/50 border border-gray-700/70
+              text-white text-sm placeholder-gray-500
               transition-all duration-200
-              focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent
+              focus:outline-none focus:ring-1 focus:ring-orange-500/50 focus:border-orange-500/50
               hover:border-gray-600
               disabled:opacity-50 disabled:cursor-not-allowed
             `,
-              leftIcon ? "pl-11 sm:pl-12" : "",
-              rightIcon ? "pr-11 sm:pr-12" : "",
-              error ? "border-red-500 focus:ring-red-500" : "",
-              className
+              leftIcon ? "pl-12 pr-5" : "px-5",
+              rightIcon && !leftIcon ? "pr-12" : rightIcon ? "pr-12" : "",
+              error
+                ? "border-red-500/60 focus:ring-red-500/40 focus:border-red-500/50"
+                : "",
+              className,
             )}
+            style={{
+              fontFamily: "var(--font-inter, 'Inter', sans-serif)",
+              paddingTop: "14px",
+              paddingBottom: "14px",
+              fontSize: "14px",
+            }}
             {...props}
           />
           {rightIcon && (
-            <div className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500">
+            <div className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-500">
               {rightIcon}
             </div>
           )}
         </div>
-        {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+        {error && <p className="mt-1.5 text-xs text-red-400">{error}</p>}
         {helperText && !error && (
-          <p className="mt-2 text-sm text-gray-500">{helperText}</p>
+          <p className="mt-1.5 text-xs text-gray-500">{helperText}</p>
         )}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";

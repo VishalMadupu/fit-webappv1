@@ -22,14 +22,12 @@ function VerifyEmailContent() {
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  // Send OTP on mount if email is present
   useEffect(() => {
     if (email && !otpSent) {
       handleSendOTP();
     }
   }, [email]);
 
-  // Countdown timer
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
@@ -49,7 +47,7 @@ function VerifyEmailContent() {
     try {
       await authService.sendOTP(email);
       setOtpSent(true);
-      setCountdown(60); // 60 second cooldown before resend
+      setCountdown(60);
     } catch (err: any) {
       setError(err.response?.data?.detail || "Failed to send OTP");
     } finally {
@@ -58,13 +56,12 @@ function VerifyEmailContent() {
   };
 
   const handleOtpChange = (index: number, value: string) => {
-    if (!/^\d*$/.test(value)) return; // Only allow digits
+    if (!/^\d*$/.test(value)) return;
 
     const newOtp = [...otp];
-    newOtp[index] = value.slice(-1); // Take only last character
+    newOtp[index] = value.slice(-1);
     setOtp(newOtp);
 
-    // Auto-focus next input
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
@@ -108,7 +105,6 @@ function VerifyEmailContent() {
     try {
       await authService.verifyOTP(email, otpCode);
       setSuccess(true);
-      // Redirect to login after 2 seconds
       setTimeout(() => {
         router.push("/login");
       }, 2000);
@@ -124,18 +120,33 @@ function VerifyEmailContent() {
   if (!email) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
-        <Card variant="glass" className="p-8 text-center max-w-md">
-          <FaEnvelope className="text-orange-500 text-4xl mx-auto mb-4" />
-          <h1 className="text-xl font-bold text-white mb-2">
-            No Email Provided
-          </h1>
-          <p className="text-gray-400 mb-6">
-            Please register first to verify your email.
-          </p>
-          <Link href="/register">
-            <Button>Go to Register</Button>
-          </Link>
-        </Card>
+        <div className="fixed inset-0 bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950" />
+        <div className="relative z-10 max-w-[440px] w-full">
+          <Card
+            variant="glass"
+            padding="none"
+            className="shadow-2xl shadow-black/50 text-center"
+            style={{ padding: "40px", borderRadius: "24px" }}
+          >
+            <FaEnvelope className="text-orange-500 text-3xl mx-auto mb-4" />
+            <h1
+              className="text-[22px] font-bold text-white mb-2"
+              style={{
+                fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+              }}
+            >
+              No Email Provided
+            </h1>
+            <p className="text-gray-400 mb-6 text-[14px]">
+              Please register first to verify your email.
+            </p>
+            <Link href="/register">
+              <Button className="w-full" size="lg">
+                Go to Register
+              </Button>
+            </Link>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -143,60 +154,105 @@ function VerifyEmailContent() {
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4">
-        <Card variant="glass" className="p-8 text-center max-w-md">
-          <FaCheckCircle className="text-green-500 text-5xl mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-white mb-2">
-            Email Verified!
-          </h1>
-          <p className="text-gray-400 mb-6">
-            Your email has been successfully verified. Redirecting to login...
-          </p>
-        </Card>
+        <div className="fixed inset-0 bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950" />
+        <div className="relative z-10 max-w-[440px] w-full">
+          <Card
+            variant="glass"
+            padding="none"
+            className="shadow-2xl shadow-black/50 text-center"
+            style={{ padding: "40px", borderRadius: "24px" }}
+          >
+            <FaCheckCircle className="text-green-500 text-4xl mx-auto mb-4" />
+            <h1
+              className="text-[28px] font-bold text-white mb-2"
+              style={{
+                fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Email Verified!
+            </h1>
+            <p className="text-gray-400 text-[14px]">
+              Your email has been successfully verified. Redirecting to sign
+              in...
+            </p>
+          </Card>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 py-12">
-      {/* Background Effects */}
+    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 py-16">
       <div className="fixed inset-0 bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950" />
-      <div className="fixed inset-0">
-        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl" />
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-orange-500/8 rounded-full blur-3xl animate-float" />
+        <div
+          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-red-500/8 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: "1.5s" }}
+        />
       </div>
 
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-[440px] animate-fadeScaleIn">
         {/* Logo */}
-        <Link href="/" className="flex items-center justify-center gap-3 mb-10">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/25">
-            <FaRunning className="text-white text-2xl" />
+        <Link href="/" className="flex items-center justify-center gap-3 mb-12">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+            <FaRunning className="text-white text-xl" />
           </div>
-          <span className="text-2xl font-bold text-orange-500">FitTrack</span>
+          <span
+            className="text-2xl font-bold text-orange-500"
+            style={{
+              fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+              letterSpacing: "0.02em",
+            }}
+          >
+            FitTrack
+          </span>
         </Link>
 
-        <Card variant="glass" className="p-6 sm:p-8">
+        {/* Card */}
+        <Card
+          variant="glass"
+          padding="none"
+          className="shadow-2xl shadow-black/50"
+          style={{
+            padding: "40px 40px 36px",
+            borderRadius: "24px",
+          }}
+        >
+          {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 rounded-full bg-orange-500/10 flex items-center justify-center mx-auto mb-4">
-              <FaEnvelope className="text-orange-500 text-2xl" />
+            <div className="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mx-auto mb-5">
+              <FaEnvelope className="text-orange-500 text-xl" />
             </div>
-            <h1 className="text-2xl font-bold text-white mb-2">
-              Verify Your Email
+            <h1
+              className="text-[28px] font-bold text-white mb-2 leading-tight"
+              style={{
+                fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Verify email
             </h1>
-            <p className="text-gray-400">
+            <p className="text-gray-400 text-[14px] leading-relaxed">
               We sent a 6-digit code to
               <br />
               <span className="text-orange-500 font-medium">{email}</span>
             </p>
           </div>
 
+          {/* Divider */}
+          <div className="w-12 h-[3px] rounded-full bg-gradient-to-r from-orange-500 to-red-500 mx-auto mb-8" />
+
+          {/* Error */}
           {error && (
-            <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
+            <div className="mb-6 px-4 py-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-[13px] text-center leading-relaxed">
               {error}
             </div>
           )}
 
           {/* OTP Input */}
-          <div className="flex justify-center gap-2 mb-6">
+          <div className="flex justify-center gap-3 mb-8">
             {otp.map((digit, index) => (
               <input
                 key={index}
@@ -211,17 +267,23 @@ function VerifyEmailContent() {
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 onPaste={handlePaste}
                 className={cn(
-                  "w-12 h-14 text-center text-2xl font-bold rounded-xl",
-                  "bg-gray-800/50 border-2 border-gray-700",
-                  "text-white focus:border-orange-500 focus:outline-none",
-                  "transition-all duration-200",
+                  "w-12 h-14 text-center text-xl font-bold rounded-xl",
+                  "bg-gray-800/50 border",
+                  "text-white focus:outline-none focus:ring-1 focus:ring-orange-500/50 transition-all duration-200",
+                  digit
+                    ? "border-orange-500/50 bg-orange-500/5"
+                    : "border-gray-700/70 focus:border-orange-500/50",
                 )}
+                style={{
+                  fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+                }}
               />
             ))}
           </div>
 
+          {/* Verify button */}
           <Button
-            className="w-full mb-4"
+            className="w-full"
             size="lg"
             onClick={handleVerify}
             isLoading={isLoading}
@@ -230,34 +292,41 @@ function VerifyEmailContent() {
             Verify Email
           </Button>
 
-          <div className="text-center">
-            <p className="text-gray-400 text-sm">
-              Didn't receive the code?{" "}
-              {countdown > 0 ? (
-                <span className="text-gray-500">Resend in {countdown}s</span>
-              ) : (
-                <button
-                  onClick={handleSendOTP}
-                  disabled={isLoading}
-                  className="text-orange-500 hover:text-orange-400 font-medium"
-                >
-                  Resend OTP
-                </button>
-              )}
-            </p>
+          {/* Resend */}
+          <div className="text-center text-[13px] text-gray-400 mt-5">
+            Didn&apos;t receive the code?{" "}
+            {countdown > 0 ? (
+              <span className="text-gray-500">Resend in {countdown}s</span>
+            ) : (
+              <button
+                onClick={handleSendOTP}
+                disabled={isLoading}
+                className="text-orange-500 hover:text-orange-400 font-semibold transition-colors"
+              >
+                Resend OTP
+              </button>
+            )}
           </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-700/50 text-center">
-            <p className="text-gray-400 text-sm">
-              Wrong email?{" "}
-              <Link
-                href="/register"
-                className="text-orange-500 hover:text-orange-400 font-medium"
-              >
-                Go back
-              </Link>
-            </p>
+          {/* Divider */}
+          <div className="flex items-center gap-4 my-7">
+            <div className="flex-1 h-px bg-gray-700/60" />
+            <span className="text-[12px] text-gray-500 font-medium tracking-wide">
+              OR
+            </span>
+            <div className="flex-1 h-px bg-gray-700/60" />
           </div>
+
+          {/* Footer */}
+          <p className="text-center text-[13px] text-gray-400">
+            Wrong email?{" "}
+            <Link
+              href="/register"
+              className="text-orange-500 hover:text-orange-400 font-semibold transition-colors"
+            >
+              Go back
+            </Link>
+          </p>
         </Card>
       </div>
     </div>
@@ -269,7 +338,7 @@ export default function VerifyEmailPage() {
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center bg-gray-950">
-          <div className="text-orange-500">Loading...</div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
         </div>
       }
     >

@@ -2,7 +2,15 @@ import React, { ButtonHTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "success" | "warning" | "link";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "outline"
+    | "ghost"
+    | "danger"
+    | "success"
+    | "warning"
+    | "link";
   size?: "sm" | "md" | "lg";
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
@@ -22,12 +30,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       fullWidth = false,
       children,
       disabled,
+      style,
       ...props
     },
-    ref
+    ref,
   ) => {
     const baseStyles = `
-      inline-flex items-center justify-center font-semibold rounded-xl
+      inline-flex items-center justify-center font-semibold rounded-2xl
       transition-all duration-200 ease-out
       focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900
       disabled:opacity-50 disabled:cursor-not-allowed
@@ -95,14 +104,26 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const sizes = {
       sm: "px-4 py-2 text-sm gap-2",
       md: "px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base gap-2.5",
-      lg: "px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg gap-3",
+      lg: "px-6 sm:px-8 py-3.5 sm:py-4 text-base sm:text-lg gap-3",
     };
 
     return (
       <button
         ref={ref}
-        className={cn(baseStyles, variants[variant], sizes[size], fullWidth ? "w-full" : "", className)}
+        className={cn(
+          baseStyles,
+          variants[variant],
+          sizes[size],
+          fullWidth ? "w-full" : "",
+          className,
+        )}
         disabled={disabled || isLoading}
+        style={{
+          fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+          letterSpacing: "0.03em",
+          fontWeight: 700,
+          ...style,
+        }}
         {...props}
       >
         {isLoading && (
@@ -140,7 +161,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

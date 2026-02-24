@@ -3,7 +3,13 @@
 import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FaLock, FaEnvelope, FaCheck, FaArrowLeft } from "react-icons/fa";
+import {
+  FaLock,
+  FaEnvelope,
+  FaCheck,
+  FaArrowLeft,
+  FaRunning,
+} from "react-icons/fa";
 import { Button, Input, Card } from "@/components/ui";
 import { authService } from "@/services/auth/authService";
 
@@ -13,16 +19,13 @@ function PasswordResetContent() {
   const token = searchParams.get("token");
 
   const [step, setStep] = useState<"request" | "reset" | "success">(
-    token ? "reset" : "request"
+    token ? "reset" : "request",
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  // For requesting reset
   const [email, setEmail] = useState("");
-
-  // For resetting password
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -38,7 +41,7 @@ function PasswordResetContent() {
     } catch (err: any) {
       setError(
         err.response?.data?.detail ||
-          "Failed to send reset email. Please try again."
+          "Failed to send reset email. Please try again.",
       );
     } finally {
       setIsLoading(false);
@@ -70,7 +73,7 @@ function PasswordResetContent() {
     } catch (err: any) {
       setError(
         err.response?.data?.detail ||
-          "Failed to reset password. Please try again."
+          "Failed to reset password. Please try again.",
       );
     } finally {
       setIsLoading(false);
@@ -82,57 +85,87 @@ function PasswordResetContent() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 py-12">
-      {/* Background Effects */}
+    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 py-16">
       <div className="fixed inset-0 bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950" />
-      <div className="fixed inset-0">
-        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl" />
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-orange-500/8 rounded-full blur-3xl animate-float" />
+        <div
+          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-red-500/8 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: "1.5s" }}
+        />
       </div>
 
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-[440px] animate-fadeScaleIn">
         {/* Logo */}
-        <Link href="/" className="flex items-center justify-center gap-3 mb-10">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/25">
-            <FaLock className="text-white text-2xl" />
+        <Link href="/" className="flex items-center justify-center gap-3 mb-12">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+            <FaRunning className="text-white text-xl" />
           </div>
-          <span className="text-2xl font-bold text-orange-500">FitTrack</span>
+          <span
+            className="text-2xl font-bold text-orange-500"
+            style={{
+              fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+              letterSpacing: "0.02em",
+            }}
+          >
+            FitTrack
+          </span>
         </Link>
 
-        <Card variant="glass" className="p-6 sm:p-8">
+        {/* Card */}
+        <Card
+          variant="glass"
+          padding="none"
+          className="shadow-2xl shadow-black/50"
+          style={{
+            padding: "40px 40px 36px",
+            borderRadius: "24px",
+          }}
+        >
           {step === "request" && (
             <>
+              {/* Header */}
               <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold text-white mb-2">
-                  Reset Password
+                <h1
+                  className="text-[28px] font-bold text-white mb-2 leading-tight"
+                  style={{
+                    fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  Reset password
                 </h1>
-                <p className="text-gray-400">
-                  Enter your email to receive a password reset link
+                <p className="text-gray-400 text-[14px] leading-relaxed">
+                  Enter your email to receive a reset link
                 </p>
               </div>
 
+              <div className="w-12 h-[3px] rounded-full bg-gradient-to-r from-orange-500 to-red-500 mx-auto mb-8" />
+
               {error && (
-                <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                <div className="mb-6 px-4 py-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-[13px] leading-relaxed">
                   {error}
                 </div>
               )}
 
               {successMessage && (
-                <div className="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm">
+                <div className="mb-6 px-4 py-3.5 rounded-2xl bg-green-500/10 border border-green-500/20 text-green-400 text-[13px] leading-relaxed">
                   {successMessage}
                 </div>
               )}
 
-              <form onSubmit={handleRequestReset} className="space-y-6">
-                <Input
-                  label="Email"
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  leftIcon={<FaEnvelope />}
-                  required
-                />
+              <form onSubmit={handleRequestReset}>
+                <div className="space-y-5 mb-8">
+                  <Input
+                    label="Email Address"
+                    type="email"
+                    placeholder="Enter your email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    leftIcon={<FaEnvelope />}
+                    required
+                  />
+                </div>
 
                 <Button
                   type="submit"
@@ -149,38 +182,50 @@ function PasswordResetContent() {
           {step === "reset" && (
             <>
               <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold text-white mb-2">
-                  Create New Password
+                <h1
+                  className="text-[28px] font-bold text-white mb-2 leading-tight"
+                  style={{
+                    fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  New password
                 </h1>
-                <p className="text-gray-400">Enter your new password below</p>
+                <p className="text-gray-400 text-[14px] leading-relaxed">
+                  Enter your new password below
+                </p>
               </div>
 
+              <div className="w-12 h-[3px] rounded-full bg-gradient-to-r from-orange-500 to-red-500 mx-auto mb-8" />
+
               {error && (
-                <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                <div className="mb-6 px-4 py-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-[13px] leading-relaxed">
                   {error}
                 </div>
               )}
 
-              <form onSubmit={handleResetPassword} className="space-y-6">
-                <Input
-                  label="New Password"
-                  type="password"
-                  placeholder="Enter new password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  leftIcon={<FaLock />}
-                  required
-                />
+              <form onSubmit={handleResetPassword}>
+                <div className="space-y-5 mb-8">
+                  <Input
+                    label="New Password"
+                    type="password"
+                    placeholder="Enter new password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    leftIcon={<FaLock />}
+                    required
+                  />
 
-                <Input
-                  label="Confirm Password"
-                  type="password"
-                  placeholder="Confirm new password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  leftIcon={<FaLock />}
-                  required
-                />
+                  <Input
+                    label="Confirm Password"
+                    type="password"
+                    placeholder="Confirm new password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    leftIcon={<FaLock />}
+                    required
+                  />
+                </div>
 
                 <Button
                   type="submit"
@@ -197,33 +242,47 @@ function PasswordResetContent() {
           {step === "success" && (
             <>
               <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FaCheck className="text-green-500 text-2xl" />
+                <div className="w-16 h-16 bg-green-500/15 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-green-500/20">
+                  <FaCheck className="text-green-400 text-2xl" />
                 </div>
-                <h1 className="text-2xl font-bold text-white mb-2">
-                  {successMessage}
+                <h1
+                  className="text-[28px] font-bold text-white mb-2 leading-tight"
+                  style={{
+                    fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  All done!
                 </h1>
-                <p className="text-gray-400">
-                  Your password has been reset successfully
+                <p className="text-gray-400 text-[14px] leading-relaxed">
+                  {successMessage}
                 </p>
               </div>
 
-              <div className="space-y-4">
-                <Button onClick={handleGoToLogin} className="w-full" size="lg">
-                  Go to Login
-                </Button>
-              </div>
+              <Button onClick={handleGoToLogin} className="w-full" size="lg">
+                Go to Sign In
+              </Button>
             </>
           )}
 
-          <div className="mt-8 text-center">
+          {/* Divider */}
+          <div className="flex items-center gap-4 my-7">
+            <div className="flex-1 h-px bg-gray-700/60" />
+            <span className="text-[12px] text-gray-500 font-medium tracking-wide">
+              OR
+            </span>
+            <div className="flex-1 h-px bg-gray-700/60" />
+          </div>
+
+          {/* Footer */}
+          <p className="text-center text-[13px] text-gray-400">
             <Link
               href="/login"
-              className="text-orange-500 hover:text-orange-400 font-medium flex items-center justify-center gap-2"
+              className="text-orange-500 hover:text-orange-400 font-semibold transition-colors inline-flex items-center gap-2"
             >
-              <FaArrowLeft className="text-sm" /> Back to Login
+              <FaArrowLeft className="text-xs" /> Back to Sign In
             </Link>
-          </div>
+          </p>
         </Card>
       </div>
     </div>

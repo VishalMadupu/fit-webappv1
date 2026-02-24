@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 export interface CardProps {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   variant?: "default" | "glass" | "gradient" | "elevated" | "bordered";
   hover?: boolean;
   padding?: "none" | "sm" | "md" | "lg";
@@ -13,39 +14,41 @@ export interface CardProps {
 const Card: React.FC<CardProps> = ({
   children,
   className,
+  style,
   variant = "default",
   hover = false,
   padding = "md",
   shadow = "md",
 }) => {
-  const baseStyles = "rounded-2xl transition-all duration-300";
+  const baseStyles = "rounded-3xl transition-all duration-300";
 
   const variants = {
-    default: "bg-gray-800/70 border border-gray-700/50",
-    glass: "bg-gray-900/50 backdrop-blur-xl border border-gray-700/40",
+    default: "bg-gray-800/70 border border-gray-700/40",
+    glass:
+      "bg-gray-900/60 backdrop-blur-2xl border border-gray-700/30 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]",
     gradient:
-      "bg-gradient-to-br from-gray-800/80 to-gray-900/80 border border-gray-700/50",
+      "bg-gradient-to-br from-gray-800/80 to-gray-900/80 border border-gray-700/40",
     elevated: "bg-gray-800/80 border border-gray-700/30 shadow-card",
-    bordered: "bg-gray-900/60 border-2 border-orange-500/30",
+    bordered: "bg-gray-900/60 border-2 border-orange-500/25",
   };
 
   const paddings = {
     none: "",
-    sm: "p-4 sm:p-5",
-    md: "p-5 sm:p-6 lg:p-7",
-    lg: "p-6 sm:p-7 lg:p-8",
+    sm: "p-5 sm:p-6",
+    md: "p-6 sm:p-8 lg:p-10",
+    lg: "p-8 sm:p-10 lg:p-12",
   };
 
   const shadows = {
     none: "",
     sm: "shadow-sm",
-    md: "shadow-md",
-    lg: "shadow-lg",
-    xl: "shadow-xl shadow-card",
+    md: "shadow-lg shadow-black/20",
+    lg: "shadow-xl shadow-black/30",
+    xl: "shadow-2xl shadow-black/40",
   };
 
   const hoverStyles = hover
-    ? "hover:border-orange-500/40 hover:shadow-xl hover:shadow-orange-500/10 hover:-translate-y-1 cursor-pointer"
+    ? "hover:border-orange-500/35 hover:shadow-xl hover:shadow-orange-500/8 hover:-translate-y-1 cursor-pointer"
     : "";
 
   return (
@@ -57,8 +60,9 @@ const Card: React.FC<CardProps> = ({
         paddings[padding],
         hover && "card-enhanced",
         hoverStyles,
-        className
+        className,
       )}
+      style={style}
     >
       {children}
     </div>
@@ -122,8 +126,8 @@ export const CardFooter: React.FC<CardFooterProps> = ({
 }) => (
   <div
     className={cn(
-      "mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-gray-700/50",
-      className
+      "mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-gray-700/40",
+      className,
     )}
   >
     {children}

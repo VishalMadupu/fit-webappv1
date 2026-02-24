@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FaLock, FaArrowLeft } from "react-icons/fa";
+import { FaLock, FaArrowLeft, FaRunning } from "react-icons/fa";
 import { Button, Input, Card } from "@/components/ui";
 import { authService } from "@/services/auth/authService";
 
@@ -45,7 +45,7 @@ export default function ChangePasswordPage() {
     } catch (err: any) {
       setError(
         err.response?.data?.detail ||
-          "Failed to change password. Please try again."
+          "Failed to change password. Please try again.",
       );
     } finally {
       setIsLoading(false);
@@ -53,74 +53,113 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 py-12">
-      {/* Background Effects */}
+    <div className="min-h-screen flex items-center justify-center bg-gray-950 px-4 py-16">
       <div className="fixed inset-0 bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950" />
-      <div className="fixed inset-0">
-        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl" />
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-orange-500/8 rounded-full blur-3xl animate-float" />
+        <div
+          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-red-500/8 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: "1.5s" }}
+        />
       </div>
 
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-[440px] animate-fadeScaleIn">
         {/* Logo */}
-        <Link href="/" className="flex items-center justify-center gap-3 mb-10">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/25">
-            <FaLock className="text-white text-2xl" />
+        <Link href="/" className="flex items-center justify-center gap-3 mb-12">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+            <FaRunning className="text-white text-xl" />
           </div>
-          <span className="text-2xl font-bold text-orange-500">FitTrack</span>
+          <span
+            className="text-2xl font-bold text-orange-500"
+            style={{
+              fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+              letterSpacing: "0.02em",
+            }}
+          >
+            FitTrack
+          </span>
         </Link>
 
-        <Card variant="glass" className="p-6 sm:p-8">
+        {/* Card */}
+        <Card
+          variant="glass"
+          padding="none"
+          className="shadow-2xl shadow-black/50"
+          style={{
+            padding: "40px 40px 36px",
+            borderRadius: "24px",
+          }}
+        >
+          {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-white mb-2">
-              Change Password
+            <h1
+              className="text-[28px] font-bold text-white mb-2 leading-tight"
+              style={{
+                fontFamily: "var(--font-outfit, 'Outfit', sans-serif)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Change password
             </h1>
-            <p className="text-gray-400">Update your account password</p>
+            <p className="text-gray-400 text-[14px] leading-relaxed">
+              Update your{" "}
+              <span className="text-orange-500 font-medium">FitTrack</span>{" "}
+              account password
+            </p>
           </div>
 
+          {/* Gradient accent line */}
+          <div className="w-12 h-[3px] rounded-full bg-gradient-to-r from-orange-500 to-red-500 mx-auto mb-8" />
+
+          {/* Error */}
           {error && (
-            <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+            <div className="mb-6 px-4 py-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-[13px] leading-relaxed">
               {error}
             </div>
           )}
 
+          {/* Success */}
           {successMessage && (
-            <div className="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm">
+            <div className="mb-6 px-4 py-3.5 rounded-2xl bg-green-500/10 border border-green-500/20 text-green-400 text-[13px] leading-relaxed">
               {successMessage}
             </div>
           )}
 
-          <form onSubmit={handleChangePassword} className="space-y-6">
-            <Input
-              label="Current Password"
-              type="password"
-              placeholder="Enter current password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              leftIcon={<FaLock />}
-              required
-            />
+          {/* Form */}
+          <form onSubmit={handleChangePassword}>
+            <div className="space-y-5 mb-8">
+              <Input
+                label="Current Password"
+                type="password"
+                placeholder="Enter current password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                leftIcon={<FaLock />}
+                required
+              />
 
-            <Input
-              label="New Password"
-              type="password"
-              placeholder="Enter new password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              leftIcon={<FaLock />}
-              required
-            />
+              <Input
+                label="New Password"
+                type="password"
+                placeholder="Enter new password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                leftIcon={<FaLock />}
+                required
+              />
 
-            <Input
-              label="Confirm New Password"
-              type="password"
-              placeholder="Confirm new password"
-              value={confirmNewPassword}
-              onChange={(e) => setConfirmNewPassword(e.target.value)}
-              leftIcon={<FaLock />}
-              required
-            />
+              <Input
+                label="Confirm New Password"
+                type="password"
+                placeholder="Confirm new password"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                leftIcon={<FaLock />}
+                required
+              />
+            </div>
 
+            {/* Submit */}
             <Button
               type="submit"
               className="w-full"
@@ -131,14 +170,24 @@ export default function ChangePasswordPage() {
             </Button>
           </form>
 
-          <div className="mt-8 text-center">
+          {/* Divider */}
+          <div className="flex items-center gap-4 my-7">
+            <div className="flex-1 h-px bg-gray-700/60" />
+            <span className="text-[12px] text-gray-500 font-medium tracking-wide">
+              OR
+            </span>
+            <div className="flex-1 h-px bg-gray-700/60" />
+          </div>
+
+          {/* Footer */}
+          <p className="text-center text-[13px] text-gray-400">
             <Link
               href="/dashboard"
-              className="text-orange-500 hover:text-orange-400 font-medium flex items-center justify-center gap-2"
+              className="text-orange-500 hover:text-orange-400 font-semibold transition-colors inline-flex items-center gap-2"
             >
-              <FaArrowLeft className="text-sm" /> Back to Dashboard
+              <FaArrowLeft className="text-xs" /> Back to Dashboard
             </Link>
-          </div>
+          </p>
         </Card>
       </div>
     </div>
