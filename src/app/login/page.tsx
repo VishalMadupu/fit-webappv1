@@ -170,7 +170,7 @@ export default function LoginPage() {
             <Button
               type="submit"
               className="w-full"
-              size="lg"
+              size="sm"
               isLoading={isLoading}
             >
               Sign In

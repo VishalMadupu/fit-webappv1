@@ -232,7 +232,7 @@ export default function RegisterPage() {
             <Button
               type="submit"
               className="w-full"
-              size="lg"
+              size="sm"
               isLoading={isLoading}
             >
               Create Account

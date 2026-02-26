@@ -156,7 +156,7 @@ function FeatureCard({
   return (
     <div ref={ref} className={`scroll-card ${isReversed ? "reversed" : ""}`}>
       <div
-        className={`flex flex-col ${
+        className={`flex  ${
           isReversed ? "lg:flex-row-reverse" : "lg:flex-row"
         } items-center gap-10 lg:gap-16 p-6 sm:p-8 lg:p-10 rounded-3xl bg-gray-900/40 border border-gray-800/40 backdrop-blur-sm`}
       >
