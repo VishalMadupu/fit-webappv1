@@ -404,7 +404,7 @@ export default function HomePage() {
                 Excel
               </span>
             </h2>
-            <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+            <p className="text-gray-400 text-base sm:text-lg mx-auto leading-relaxed">
               Powerful features designed for athletes of all levels. Track,
               analyze, and improve your performance.
             </p>
