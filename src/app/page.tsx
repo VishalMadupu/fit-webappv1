@@ -156,12 +156,10 @@ function FeatureCard({
   return (
     <div ref={ref} className={`scroll-card ${isReversed ? "reversed" : ""}`}>
       <div
-        className={`flex flex-col ${
-          isReversed ? "lg:flex-row-reverse" : "lg:flex-row"
-        } items-center gap-8 md:gap-12 lg:gap-16 p-6 md:p-8 lg:p-12 rounded-3xl bg-gray-900/40 border border-gray-800/40 backdrop-blur-sm`}
+        className={`flex flex-col lg:flex-row ${isReversed ? "lg:flex-row-reverse" : ""} items-center lg:items-start gap-10 md:gap-14 lg:gap-16 p-6 sm:p-8 lg:p-12 rounded-3xl bg-gray-900/40 border border-gray-800/40 backdrop-blur-sm`}
       >
         {/* ── Image / Illustration Side ── */}
-        <div className="card-image flex-1 w-full">
+        <div className="card-image flex-1 w-full lg:w-auto min-w-0">
           <div className="feature-illustration">
             {/* Grid overlay */}
             <div
@@ -223,7 +221,7 @@ function FeatureCard({
         </div>
 
         {/* ── Text Side ── */}
-        <div className="card-text flex-1">
+        <div className="card-text flex-1 w-full lg:w-auto min-w-0">
           {/* Tag */}
           <div
             className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5"

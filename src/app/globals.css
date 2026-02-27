@@ -601,6 +601,23 @@ body {
   transform: translateX(0);
 }
 
+/* Force side-by-side layout on large screens */
+@media (min-width: 1024px) {
+  .scroll-card > div {
+    flex-direction: row !important;
+  }
+  
+  .scroll-card.reversed > div {
+    flex-direction: row-reverse !important;
+  }
+  
+  .scroll-card .card-image,
+  .scroll-card .card-text {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
 /* Feature illustration decorative styles */
 .feature-illustration {
   position: relative;
